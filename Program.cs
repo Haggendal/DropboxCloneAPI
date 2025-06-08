@@ -1,9 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using DropboxCloneAPI;
 using DropboxCloneAPI.Repositories;
 using DropboxCloneAPI.Services;
 
-namespace FileStorageAPI
+namespace DropboxCloneAPI
 {
     public class Program
     {
@@ -18,18 +17,15 @@ namespace FileStorageAPI
                 options.UseNpgsql(connectionString)
             );
 
-            // Register repositories
             builder.Services.AddScoped<IFileRepository, EfFileRepository>();
             builder.Services.AddScoped<IFolderRepository, EfFolderRepository>();
 
-            // Register services
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IFolderService, FolderService>();
 
-            // Configure file upload limits
             builder.Services.Configure<IISServerOptions>(options =>
             {
-                options.MaxRequestBodySize = 100_000_000; // 100 MB
+                options.MaxRequestBodySize = 100_000_000;
             });
 
             builder.Services.AddCors(options =>
